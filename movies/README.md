@@ -12,15 +12,15 @@ curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/schema.gq
 ```
 After that, the data has to be loaded. Load the entities
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/1_entities.gql"}' http://localhost:4567/import/batch/data
+curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/1-entities.gql"}' http://localhost:4567/import/batch/data
 ```
 Then the ternary relations
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/2_ternary_relations.gql"}' http://localhost:4567/import/batch/data
+curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/2-ternary-relations.gql"}' http://localhost:4567/import/batch/data
 ```
 And finally the binary relations
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/3_binary_relations.gql"}' http://localhost:4567/import/batch/data
+curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/3-binary-relations.gql"}' http://localhost:4567/import/batch/data
 
 ```
 
