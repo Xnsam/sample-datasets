@@ -221,6 +221,7 @@ insert
     has-resource residence
     has-resource deathday
     has-resource has-spouse
+    has-resource status
     has-resource homepage;
 "relative" isa role-type is-abstract;
 
