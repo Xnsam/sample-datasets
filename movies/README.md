@@ -24,18 +24,9 @@ First the schema file must be loaded, by running the following command into your
 ```
 curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/schema.gql"}' http://localhost:4567/import/ontology
 ```
-After that, the data has to be loaded. Load the entities
+After that, the data has to be loaded. 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/1-entities.gql"}' http://localhost:4567/import/batch/data
-```
-Then the ternary relations
-```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/2-ternary-relations.gql"}' http://localhost:4567/import/batch/data
-```
-And finally the binary relations
-```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/3-binary-relations.gql"}' http://localhost:4567/import/batch/data
-
+curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/movie-data.gql"}' http://localhost:4567/import/batch/data
 ```
 
 If everything went well, you will be able to query you new dataset.
