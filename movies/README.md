@@ -11,17 +11,19 @@ After downloading the files and starting the MindmapsDB engine, the .gql files m
 
 _Notice that this can take easily take more than 30 minutes for the large dataset, depending on your computer._
 
-First, the schema file must be loaded, by running the following command into your favourite shell:
+First, the schema file must be loaded. Start the MindmapsDB engine and run the following command into your favourite shell:
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/schema.gql"}' http://localhost:4567/import/ontology
+/PATH/TO/graql.sh -f /PATH/TO/schema.gql
 ```
 
 After that, the data has to be loaded:
 
 ```
-curl -H "Content-Type: application/json" -X POST -d '{"path":"/PATH/TO/movie-data.gql"}' http://localhost:4567/import/batch/data
+/PATH/TO/graql.sh -b /PATH/TO/movie-data.gql
 ```
+
+_Please notice that the two commands are different!_
 
 In order to check the status of loading the data, you can open a new terminal, navigate to the `logs` directory in your MindmapsDB installation, and run the command:
 
