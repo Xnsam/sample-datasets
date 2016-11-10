@@ -28,6 +28,7 @@ insert
     has-resource original-title
     has-resource alternate-titles
     
+    has-resource instance-id
     has-resource imdb-vote 
     has-resource rotten-tomatoes-critic-rating 
     has-resource rotten-tomatoes-critic-fresh-votes 
@@ -207,6 +208,7 @@ insert
     plays-role detailed-person
     plays-role keyword-person
     
+    has-resource instance-id
     has-resource name
     has-resource imdb-identifier
     has-resource images
@@ -275,6 +277,7 @@ insert
 
     plays-role nominee
     
+    has-resource instance-id
     has-resource parent-company
     has-resource industry
     has-resource headquarters
@@ -313,7 +316,8 @@ insert
     plays-role narrative-location
     plays-role filming-location
     plays-role country-of-citizenship
-    has-resource name;
+    has-resource name
+    has-resource instance-id;
 
 "country" sub location 
     has-resource iso-3166;
@@ -326,13 +330,15 @@ insert
     has-resource iso-639-1
     has-resource iso-639-2
     has-resource iso-639-3
-    has-resource wikimedia-language-code;
+    has-resource wikimedia-language-code
+    has-resource instance-id;
 
 "award" isa entity-type
     plays-role award-of-subject
     plays-role nominated-award
     has-resource description
-    has-resource name;
+    has-resource name
+    has-resource instance-id;
 
 "parent-feature" isa relation-type
     has-role parent-of-feature
@@ -342,43 +348,54 @@ insert
 
 "character" isa entity-type 
     plays-role character-being-played
-    has-resource name;
+    has-resource name
+    has-resource instance-id;
 
 "certificate" isa entity-type
     plays-role certificate-of-production
-    has-resource description;
+    has-resource description
+    has-resource instance-id;
 
 "genre" isa entity-type
     plays-role genre-of-production
     has-resource weight
-    has-resource description;
+    has-resource description
+    has-resource instance-id;
 
 "keyword" isa entity-type
     plays-role keyword-of-subject
     has-resource name
-    has-resource weight;
+    has-resource weight
+    has-resource instance-id;
 
 "review" isa entity-type
     plays-role review-of-subject
     has-resource content
     has-resource media-type
-    has-resource author;
+    has-resource author
+    has-resource instance-id;
  
 "occupation" isa entity-type
     plays-role occupation-of-person
-    has-resource description;
+    has-resource description
+    has-resource instance-id;
 
 "cluster" isa entity-type
     plays-role cluster-of-production
     has-resource description
-    has-resource cluster-id;
+    has-resource cluster-id
+    has-resource instance-id;
 
 "mood" isa entity-type
     plays-role mood-of-production
-    has-resource description;
+    has-resource description
+    has-resource instance-id;
 
 
 ### RESOURCE TYPES:
+
+"instance-id" isa resource-type
+    datatype string;
 
 "title" isa resource-type
     datatype string;
@@ -619,7 +636,8 @@ insert
 
 "streaming-url" isa entity-type 
     has-resource url
-    plays-role streaming-url-role; 
+    plays-role streaming-url-role
+    has-resource instance-id; 
 
 "url" isa resource-type
     datatype string;
