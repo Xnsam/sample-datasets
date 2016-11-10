@@ -28,6 +28,7 @@ insert
     has-resource original-title
     has-resource alternate-titles
     
+    has-resource instance-id
     has-resource imdb-vote 
     has-resource rotten-tomatoes-critic-rating 
     has-resource rotten-tomatoes-critic-fresh-votes 
@@ -206,7 +207,8 @@ insert
     plays-role nominee
     plays-role detailed-person
     plays-role keyword-person
-    
+
+    has-resource instance-id    
     has-resource name
     has-resource imdb-identifier
     has-resource images
@@ -275,6 +277,7 @@ insert
 
     plays-role nominee
     
+    has-resource instance-id
     has-resource parent-company
     has-resource industry
     has-resource headquarters
@@ -313,6 +316,7 @@ insert
     plays-role narrative-location
     plays-role filming-location
     plays-role country-of-citizenship
+    has-resource instance-id
     has-resource name;
 
 "country" sub location 
@@ -322,6 +326,7 @@ insert
     plays-role language-of-subject
     plays-role original-language
     plays-role translation
+    has-resource instance-id
     has-resource name
     has-resource iso-639-1
     has-resource iso-639-2
@@ -331,6 +336,7 @@ insert
 "award" isa entity-type
     plays-role award-of-subject
     plays-role nominated-award
+    has-resource instance-id
     has-resource description
     has-resource name;
 
@@ -342,43 +348,54 @@ insert
 
 "character" isa entity-type 
     plays-role character-being-played
+    has-resource instance-id;
     has-resource name;
 
 "certificate" isa entity-type
     plays-role certificate-of-production
+    has-resource instance-id
     has-resource description;
 
 "genre" isa entity-type
     plays-role genre-of-production
+    has-resource instance-id
     has-resource weight
     has-resource description;
 
 "keyword" isa entity-type
     plays-role keyword-of-subject
+    has-resource instance-id
     has-resource name
     has-resource weight;
 
 "review" isa entity-type
     plays-role review-of-subject
+    has-resource instance-id
     has-resource content
     has-resource media-type
     has-resource author;
  
 "occupation" isa entity-type
     plays-role occupation-of-person
+    has-resource instance-id
     has-resource description;
 
 "cluster" isa entity-type
     plays-role cluster-of-production
+    has-resource instance-id
     has-resource description
     has-resource cluster-id;
 
 "mood" isa entity-type
     plays-role mood-of-production
+    has-resource instance-id
     has-resource description;
 
 
 ### RESOURCE TYPES:
+
+"instance-id" isa resource-type
+    datatype string;
 
 "title" isa resource-type
     datatype string;
