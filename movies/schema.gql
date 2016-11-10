@@ -348,7 +348,7 @@ insert
 
 "character" isa entity-type 
     plays-role character-being-played
-    has-resource instance-id;
+    has-resource instance-id
     has-resource name;
 
 "certificate" isa entity-type
