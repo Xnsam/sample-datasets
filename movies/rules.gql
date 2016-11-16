@@ -4,22 +4,22 @@ isa inference-rule,
 lhs {(production-with-genre: $x, genre-of-production: $y) isa has-genre;
 $y has description 'Sci-Fi';
 $z isa genre;
-$z has description 'science fiction'; select $x, $z},
+$z has description 'science fiction';}
 rhs {(production-with-genre: $x, genre-of-production: $z) isa has-genre;};
 
 isa inference-rule,
 lhs {$x isa movie;
 $x has rotten-tomatoes-user-total-votes > 500;
-$x has rotten-tomatoes-user-rating >= 3.9;},
+$x has rotten-tomatoes-user-rating >= 3.9;}
 rhs {$x has status 'popular movie';};
 
 isa inference-rule,
 lhs {(actor: $x, production-with-cast: $y) isa has-cast;
-$y has status "popular movie";},
+$y has status "popular movie";}
 rhs {$x has status 'popular actor';};
 
 isa inference-rule,
 lhs {(actor: $x) isa has-cast;
-(director: $x) isa production-crew;},
+(director: $x) isa production-crew;}
 rhs {$x has status 'actor-director';};
 
