@@ -1,1 +1,1 @@
-# Sample Graql Datasets for MindmapsDB
+# Sample Graql Datasets for GRAKN.AI
