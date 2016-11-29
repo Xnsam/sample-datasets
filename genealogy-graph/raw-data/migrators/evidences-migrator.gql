@@ -1,0 +1,12 @@
+match 
+	$d isa document has identifier <document>;
+	$p1 isa person has identifier <protagonist1>;
+	$r1 (happening: $e, protagonist: $p1); 
+		$r1 has function <function>;
+	if (ne protagonist2 null) do {
+	$p2 isa person has identifier <protagonist2>;
+	$r2 (happening: $e, protagonist: $p2);
+		$r2 has function <function>;
+	}
+insert
+	(evidence: $d, conclusion: $e) isa conclusion-evidence;

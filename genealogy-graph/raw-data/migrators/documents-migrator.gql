@@ -1,0 +1,6 @@
+insert
+	$d isa document,
+		has document-type <document-type>,
+		has document-location <url>,
+		has identifier <did>,
+		has notes <notes>;
