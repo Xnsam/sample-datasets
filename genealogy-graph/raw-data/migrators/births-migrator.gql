@@ -1,0 +1,12 @@
+match
+	$c has identifier <child>;
+	$p1 has identifier <parent1>;
+	$p2 has identifier <parent2>;
+	$b isa birth;
+	$r (happening: $b, protagonist: $c) isa event-protagonist;
+	$r has function "newborn";
+insert
+	$r1 (happening: $b, protagonist: $p1) isa event-protagonist
+		has function "parent";
+	$r2 (happening: $b, protagonist: $p2) isa event-protagonist,
+		has function "parent";
