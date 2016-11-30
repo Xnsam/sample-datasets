@@ -55,6 +55,14 @@ insert
  rhs
  {$p has death-date $date;};
 
+ $materializePeopleAge isa inference-rule
+ lhs
+ {$b isa death has confidence "high" has age $age;
+ $rel (happening: $b, protagonist: $p);
+ $rel isa event-protagonist has function "deceased";}
+ rhs
+ {$p has age $age;};
+
 #############################################################################
 #                                                                           #
 #     Rules to retrieve parentships from high confidence birth events       #
@@ -86,7 +94,7 @@ $rel1 has function "spouse";
 $rel2 (happening: $w, protagonist: $s2) isa event-protagonist;
 $rel2 has function "spouse";}
 rhs
-{(spouse1: $s1, spouse2: $s2) isa marriage;};insert
+{(spouse1: $s1, spouse2: $s2) isa marriage;};
 
 $parentsOfParentsAreGrandparents isa inference-rule
 lhs
@@ -134,8 +142,6 @@ lhs
 (parent: $il, child: $x) isa parentship;}
 rhs
 {(parent-in-law: $il, child-in-law: $y) isa in-laws;};
-insert
-
 
 isa inference-rule
 lhs

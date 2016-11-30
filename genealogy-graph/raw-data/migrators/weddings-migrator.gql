@@ -1,0 +1,15 @@
+match
+	$x has identifier <spouse1>;
+	$y has identifier <spouse2>;
+insert
+	$m isa wedding,
+	has identifier <wid>,
+	has confidence "high";
+	if (ne date null) do 
+		{
+		$m has date <date>;
+		}
+	(happening: $m, protagonist: $x) isa event-protagonist,
+		has function "spouse";
+	(happening: $m, protagonist: $y) isa event-protagonist,
+		has function "spouse";
