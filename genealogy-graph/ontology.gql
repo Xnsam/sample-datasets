@@ -57,7 +57,10 @@ child-identifier sub identifier;
 parent-identifier sub identifier;
 
 death sub event
-	has-resource death-date;
+	has-resource death-date
+	has-resource age;
+
+age isa resource-type datatype long;
 
 date isa resource-type datatype string;
 
@@ -77,6 +80,7 @@ person isa entity-type
 	plays-role cousin
 	plays-role child-in-law
 	plays-role parent-in-law
+	has-resource age
 	has-resource gender
 	has-resource birth-date
 	has-resource death-date
