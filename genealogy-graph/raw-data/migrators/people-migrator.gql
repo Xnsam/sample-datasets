@@ -17,17 +17,15 @@ insert
 		{
 		$x has birth-date <born>;
 		}
-	$y isa death;
+	$y isa death has confidence "high";
 	(happening: $y, protagonist: $p) isa event-protagonist,
 			has function "deceased";
 	if (ne dead null) do 
 		{
-		$y 	has death-date <dead>,
-			has confidence "high";
+		$y 	has death-date <dead>;
 		}
 
 	if (ne age null) do 
 		{
-		$y 	has age @long(age),
-			has confidence "high";
+		$y 	has age @long(age);
 		}
