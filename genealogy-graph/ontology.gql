@@ -73,8 +73,7 @@ person isa entity-type
 	plays-role protagonist
 	plays-role spouse1
 	plays-role spouse2
-	plays-role parent1
-	plays-role parent2
+	plays-role parent
 	plays-role child
 	plays-role sibling1
 	plays-role sibling2
