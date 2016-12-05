@@ -73,6 +73,16 @@ person isa entity-type
 	plays-role protagonist
 	plays-role spouse1
 	plays-role spouse2
+	plays-role wife
+	plays-role husband
+	plays-role granddaughter
+	plays-role grandson
+	plays-role father-in-law
+	plays-role mother-in-law
+	plays-role daughter-in-law
+	plays-role son-in-law
+	plays-role son
+	plays-role daughter
 	plays-role parent
 	plays-role child
 	plays-role sibling1
