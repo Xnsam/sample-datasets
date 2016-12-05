@@ -93,6 +93,10 @@ person isa entity-type
 	plays-role cousin2
 	plays-role child-in-law
 	plays-role parent-in-law
+	plays-role mother
+	plays-role father
+	plays-role grandmother
+	plays-role grandfather
 	has-resource age
 	has-resource gender
 	has-resource birth-date
