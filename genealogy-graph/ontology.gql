@@ -71,13 +71,17 @@ confidence isa resource-type datatype string;
 
 person isa entity-type
 	plays-role protagonist
-	plays-role spouse
-	plays-role parent	
+	plays-role spouse1
+	plays-role spouse2
+	plays-role parent1
+	plays-role parent2
 	plays-role child
-	plays-role sibling
+	plays-role sibling1
+	plays-role sibling2
 	plays-role grandparent
 	plays-role grandchild
-	plays-role cousin
+	plays-role cousin1
+	plays-role cousin2
 	plays-role child-in-law
 	plays-role parent-in-law
 	has-resource age
