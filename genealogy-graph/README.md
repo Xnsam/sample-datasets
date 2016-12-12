@@ -1,4 +1,4 @@
-This example project is described in more detail at https://medium.com/@doctormiko/1bb639396a24#.becpcqqi1 (TO CHANGE WHEN BLOG PUBLISHED)
+This example project is described in more detail at https://medium.com/@doctormiko/1bb639396a24#.becpcqqi1
 
 
 ## ontology.gql
@@ -26,3 +26,7 @@ Load the data:
 ## rules.gql
 
 A set of rules for the Grakn reasoner.
+
+```
+../bin/graql.sh -f ./rules.gql
+```
