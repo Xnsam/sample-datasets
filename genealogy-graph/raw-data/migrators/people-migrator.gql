@@ -5,27 +5,27 @@ insert
 		has confidence "high";
 	(happening: $x, protagonist: $p) isa event-protagonist,
 		has function "newborn";
-	if (ne surname null) do 
+	if (<surname> != "") do 
 		{
 		$x has surname <surname>;
 		}
-	if (ne name2 null) do 
+	if (<name2> != "") do 
 		{
 		$x has middlename <name2>;
 		}
-	if (ne born null) do 
+	if (<born> != "") do 
 		{
 		$x has birth-date <born>;
 		}
 	$y isa death has confidence "high";
 	(happening: $y, protagonist: $p) isa event-protagonist,
 			has function "deceased";
-	if (ne dead null) do 
+	if (<dead> != "") do 
 		{
 		$y 	has death-date <dead>;
 		}
 
-	if (ne age null) do 
+	if (<age> != "") do 
 		{
-		$y 	has age @long(age);
+		$y 	has age @long(<age>);
 		}
