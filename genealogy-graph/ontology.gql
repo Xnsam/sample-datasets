@@ -4,10 +4,10 @@ document sub entity
 	plays-role evidence
 	has-resource identifier
 	has-resource document-location
-	has-resource document
+	has-resource document-type
 	has-resource notes;
 document-location sub resource datatype string;
-document sub resource datatype string;
+document-type sub resource datatype string;
 
 notes sub resource datatype string;
 

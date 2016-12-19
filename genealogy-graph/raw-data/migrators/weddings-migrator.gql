@@ -5,7 +5,7 @@ insert
 	$m isa wedding,
 	has identifier <wid>,
 	has confidence "high";
-	if (ne date null) do 
+	if (<date> != null) do 
 		{
 		$m has date <date>;
 		}
