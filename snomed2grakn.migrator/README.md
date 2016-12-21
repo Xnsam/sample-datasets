@@ -1,0 +1,7 @@
+This is SNOMED-CT 2 Grakn migrator. 
+
+Currently, it is fixed to use the file named "snomedSample.owl", which should be placed in the project's directory. 
+It contains a sample of 400+ (out of 300K+) SNOMED-CT classes and all 200+ object properties. 
+
+The full version of SNOMED-CT OWL ontology is available at:
+https://www.dropbox.com/s/obgjayguwueo7sd/snomed_ct_full_inv.owl?dl=0
