@@ -119,7 +119,7 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 			ax.accept(visitor);
 			});
 		System.out.println("Waiting to finish...");
-		//Main.loaderClient.waitToFinish();
+		Main.loaderClient.waitToFinish();
 		System.out.println("Final commit...");
 		Main.commitGraph();
 		

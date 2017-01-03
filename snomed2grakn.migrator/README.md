@@ -9,6 +9,4 @@ https://www.dropbox.com/s/obgjayguwueo7sd/snomed_ct_full_inv.owl?dl=0
 TODO:
 
 The Main class must be extended:
-- to allow the file name as a parameter 
-- to use the default graph provided by MigrationCLI instead of the IN_MEMORY one
-- to commit/close the graph on completing the migration
+- to allow the file name as a parameter (via the MigrationCLI)
