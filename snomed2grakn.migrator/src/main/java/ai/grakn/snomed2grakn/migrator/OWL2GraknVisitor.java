@@ -49,19 +49,17 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
     	
     	OWL2GraknExpressionVisitor visitor = new OWL2GraknExpressionVisitor();
     	
-    	PatternContent subPattern = subClass.accept(visitor);
-    	PatternContent superPattern = superClass.accept(visitor);
+    	Snomed2GraknPattern subPattern = subClass.accept(visitor);
+    	Snomed2GraknPattern superPattern = superClass.accept(visitor);
 		
-    	List<Pattern> matchPatternList = Stream.concat(subPattern.matchPatternList.stream(), superPattern.matchPatternList.stream()).collect(Collectors.toList());
+    	List<Pattern> matchPatternList = Snomed2GraknPattern.patternConcat(subPattern.matchPatternList, superPattern.matchPatternList);
     	Pattern[] matchPattern = matchPatternList.toArray(new Pattern[matchPatternList.size()]);
-    	
-    	List<Var> insertPatternList = Stream.concat(subPattern.insertPatternList.stream(), superPattern.insertPatternList.stream()).collect(Collectors.toList());
     	   	
     	Var relationPattern = var().rel("subclass", var(subPattern.var)).rel("superclass", var(superPattern.var)).isa("subclassing");
-    			
-    	insertPatternList.add(relationPattern);
-
+    	
+    	List<Var> insertPatternList = Snomed2GraknPattern.varConcat(Snomed2GraknPattern.varConcat(subPattern.insertPatternList, superPattern.insertPatternList), relationPattern);
     	Var[] insertPattern = insertPatternList.toArray(new Var[insertPatternList.size()]);
+    	
     	//System.out.println(match(matchPattern).insert(insertPattern).toString()); System.out.println();
     	Main.loaderClient.add(match(matchPattern).insert(insertPattern));
    }
@@ -72,21 +70,17 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
      	
     	OWL2GraknExpressionVisitor visitor = new OWL2GraknExpressionVisitor();
     	
-    	PatternContent entity1 = classes.get(0).accept(visitor);
-    	PatternContent entity2 = classes.get(1).accept(visitor);
+    	Snomed2GraknPattern entity1 = classes.get(0).accept(visitor);
+    	Snomed2GraknPattern entity2 = classes.get(1).accept(visitor);
     	
-    	List<Pattern> matchPatternList = Stream.concat(entity1.matchPatternList.stream(), entity2.matchPatternList.stream()).collect(Collectors.toList());
+    	List<Pattern> matchPatternList = Snomed2GraknPattern.patternConcat(entity1.matchPatternList, entity2.matchPatternList);
     	Pattern[] matchPattern = matchPatternList.toArray(new Pattern[matchPatternList.size()]);
-    	
-    	List<Var> insertPatternList = Stream.concat(entity1.insertPatternList.stream(), entity2.insertPatternList.stream()).collect(Collectors.toList());
     	   	
     	Var relationPattern1 = var().rel("subclass", var(entity1.var)).rel("superclass", var(entity2.var)).isa("subclassing");
     	Var relationPattern2 = var().rel("subclass", var(entity2.var)).rel("superclass", var(entity1.var)).isa("subclassing");
-    			
-    	insertPatternList.add(relationPattern1);
-    	insertPatternList.add(relationPattern2);
     	
-    	Var[] insertPattern = insertPatternList.toArray(new Var[insertPatternList.size()]);
+     	List<Var> insertPatternList = Snomed2GraknPattern.varConcat(Snomed2GraknPattern.varConcat(Snomed2GraknPattern.varConcat(entity1.insertPatternList, entity2.insertPatternList), relationPattern1), relationPattern2);
+      	Var[] insertPattern = insertPatternList.toArray(new Var[insertPatternList.size()]);
     	
     	//System.out.println(match(matchPattern).insert(insertPattern).toString()); System.out.println();
     	Main.loaderClient.add(match(matchPattern).insert(insertPattern));
@@ -116,7 +110,6 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 	    Pattern body = Graql.and(leftSub, rightSub);
 	    Pattern head = Graql.var().isa(superRelationInfo[0]).rel(superRelationInfo[1], "x").rel(superRelationInfo[2], "z");
 	    ruleType.addRule(body, head);
-	    System.out.println("Property chain migrated");
 	}	
 	
 	public void visit(OWLInverseObjectPropertiesAxiom ax) {
@@ -128,12 +121,11 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 		Pattern body = Graql.var().isa(secondRelationInfo[0]).rel(secondRelationInfo[1], "x").rel(secondRelationInfo[2], "y");
 		Pattern head = Graql.var().isa(firstRelationInfo[0]).rel(firstRelationInfo[1], "y").rel(firstRelationInfo[2], "x");
 		ruleType.addRule(body, head);
-	    System.out.println("Inverse property migrated");
 	}
 	
 }
 
-class OWL2GraknExpressionVisitor implements OWLClassExpressionVisitorEx<PatternContent> {
+class OWL2GraknExpressionVisitor implements OWLClassExpressionVisitorEx<Snomed2GraknPattern> {
   
 	
 	public static int varNo = 0;
@@ -141,6 +133,71 @@ class OWL2GraknExpressionVisitor implements OWLClassExpressionVisitorEx<PatternC
 	public static String getNewVarName() {
 		varNo++;
 		return "var"+varNo;
+	}
+	
+	public Snomed2GraknPattern visit(OWLClass exp) {
+		String snomedUri = Migrator.entities.get(exp);
+		String classVar = getNewVarName();
+		Pattern matchPattern = var(classVar).has("snomed-uri", snomedUri);
+		
+		return new Snomed2GraknPattern(matchPattern, classVar);
+	}
+	
+	public Snomed2GraknPattern visit(OWLObjectIntersectionOf exp) {
+		String conjunctionVar = getNewVarName();
+		Var conjunctionEntityPattern = var(conjunctionVar).isa("intersection-class");
+		
+		List<Pattern> matchPatternList = Arrays.asList();
+		List<Var> insertPatternList = Arrays.asList(conjunctionEntityPattern);
+
+		for (OWLClassExpression conjunctEntity : exp.asConjunctSet()) {
+			Snomed2GraknPattern conjunctEntityPattern = conjunctEntity.accept(this);
+			matchPatternList = Snomed2GraknPattern.patternConcat(matchPatternList, conjunctEntityPattern.matchPatternList);
+			insertPatternList = Snomed2GraknPattern.varConcat(insertPatternList, conjunctEntityPattern.insertPatternList);
+			Var relationPattern = var().rel("subclass", var(conjunctionVar)).rel("superclass", var(conjunctEntityPattern.var)).isa("subclassing");
+			insertPatternList.add(relationPattern);
+		}
+		
+		return new Snomed2GraknPattern(matchPatternList, insertPatternList, conjunctionVar);
+	}
+	
+	public Snomed2GraknPattern visit(OWLObjectSomeValuesFrom exp) {
+		String existentialVar = getNewVarName();
+		
+		OWLObjectProperty property = (OWLObjectProperty) exp.getProperty();
+		String[] relationInfo = Migrator.relationTypes.get(property);
+				
+		OWLClassExpression fillerExpression = exp.getFiller();
+		Snomed2GraknPattern fillerEntityPattern = fillerExpression.accept(this);
+		
+		List<Var> insertPatternList = fillerEntityPattern.insertPatternList;
+		
+		Var existentialEntityPattern = var(existentialVar).isa("existential-class");
+		Var relationPattern = var().rel(relationInfo[1], var(existentialVar)).rel(relationInfo[2], var(fillerEntityPattern.var)).isa(relationInfo[0]);
+		
+		insertPatternList = Snomed2GraknPattern.varConcat(insertPatternList, existentialEntityPattern);
+		insertPatternList = Snomed2GraknPattern.varConcat(insertPatternList, relationPattern);
+
+		return new Snomed2GraknPattern(fillerEntityPattern.matchPatternList, insertPatternList, existentialVar);
+	}
+	
+}
+
+class Snomed2GraknPattern{
+	List<Pattern> matchPatternList;
+	List<Var> insertPatternList;
+	String var;
+	
+	Snomed2GraknPattern(List<Pattern> matchList, List<Var> insertList, String var) {
+		this.matchPatternList = matchList;
+		this.insertPatternList = insertList;
+		this.var = var;
+	}
+	
+	Snomed2GraknPattern(Pattern match, String var) {
+		this.matchPatternList = Arrays.asList(match);
+		this.insertPatternList = Arrays.asList();
+		this.var = var;
 	}
 	
 	public static List<Pattern> patternConcat(List<Pattern> firstList, List<Pattern> secondList) {
@@ -157,71 +214,6 @@ class OWL2GraknExpressionVisitor implements OWLClassExpressionVisitorEx<PatternC
 	
 	public static List<Var> varConcat(List<Var> patternList, Var pattern) {
 		return Stream.concat(patternList.stream(), Arrays.asList(pattern).stream()).collect(Collectors.toList());
-	}
-	
-	public PatternContent visit(OWLClass exp) {
-		String snomedUri = Migrator.entities.get(exp);
-		String classVar = getNewVarName();
-		Pattern matchPattern = var(classVar).has("snomed-uri", snomedUri);
-		
-		return new PatternContent(matchPattern, classVar);
-	}
-	
-	public PatternContent visit(OWLObjectIntersectionOf exp) {
-		String conjunctionVar = getNewVarName();
-		Var conjunctionEntityPattern = var(conjunctionVar).isa("intersection-class");
-		
-		List<Pattern> matchPatternList = Arrays.asList();
-		List<Var> insertPatternList = Arrays.asList(conjunctionEntityPattern);
-
-		for (OWLClassExpression conjunctEntity : exp.asConjunctSet()) {
-			PatternContent conjunctEntityPattern = conjunctEntity.accept(this);
-			matchPatternList = patternConcat(matchPatternList, conjunctEntityPattern.matchPatternList);
-			insertPatternList = varConcat(insertPatternList, conjunctEntityPattern.insertPatternList);
-			Var relationPattern = var().rel("subclass", var(conjunctionVar)).rel("superclass", var(conjunctEntityPattern.var)).isa("subclassing");
-			insertPatternList.add(relationPattern);
-		}
-		
-		return new PatternContent(matchPatternList, insertPatternList, conjunctionVar);
-	}
-	
-	public PatternContent visit(OWLObjectSomeValuesFrom exp) {
-		String existentialVar = getNewVarName();
-		
-		OWLObjectProperty property = (OWLObjectProperty) exp.getProperty();
-		String[] relationInfo = Migrator.relationTypes.get(property);
-				
-		OWLClassExpression fillerExpression = exp.getFiller();
-		PatternContent fillerEntityPattern = fillerExpression.accept(this);
-		
-		List<Var> insertPatternList = fillerEntityPattern.insertPatternList;
-		
-		Var existentialEntityPattern = var(existentialVar).isa("existential-class");
-		Var relationPattern = var().rel(relationInfo[1], var(existentialVar)).rel(relationInfo[2], var(fillerEntityPattern.var)).isa(relationInfo[0]);
-		
-		insertPatternList = varConcat(insertPatternList, existentialEntityPattern);
-		insertPatternList = varConcat(insertPatternList, relationPattern);
-
-		return new PatternContent(fillerEntityPattern.matchPatternList, insertPatternList, existentialVar);
-	}
-	
-}
-
-class PatternContent {
-	List<Pattern> matchPatternList;
-	List<Var> insertPatternList;
-	String var;
-	
-	PatternContent(List<Pattern> matchList, List<Var> insertList, String var) {
-		this.matchPatternList = matchList;
-		this.insertPatternList = insertList;
-		this.var = var;
-	}
-	
-	PatternContent(Pattern match, String var) {
-		this.matchPatternList = Arrays.asList(match);
-		this.insertPatternList = Arrays.asList();
-		this.var = var;
 	}
 	
 }

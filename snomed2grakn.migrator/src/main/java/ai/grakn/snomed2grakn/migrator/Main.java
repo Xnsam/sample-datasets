@@ -39,8 +39,8 @@ public class Main
     	graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
     	loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
     	
-    	File input = new File("snomed_ct_full_inv.owl");
-        //File input = new File("snomedSample.owl"); 
+    	//File input = new File("snomed_ct_full_inv.owl");
+        File input = new File("snomedSample.owl"); 
 		System.out.println(input.getAbsoluteFile());
 		try{
 			System.out.println("Loading SNOMED...");
