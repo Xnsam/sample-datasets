@@ -1,5 +1,8 @@
 package ai.grakn.snomed2grakn.migrator;
 
+import static ai.grakn.graql.Graql.insert;
+import static ai.grakn.graql.Graql.var;
+
 import java.util.HashMap;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -14,14 +17,13 @@ import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.SimpleShortFormProvider;
 
 import ai.grakn.GraknGraph;
-import ai.grakn.concept.Concept;
-import ai.grakn.concept.Entity;
 import ai.grakn.concept.EntityType;
 import ai.grakn.concept.RelationType;
 import ai.grakn.concept.ResourceType;
 import ai.grakn.concept.RoleType;
 import ai.grakn.graql.Graql;
 import ai.grakn.graql.Pattern;
+import ai.grakn.graql.Var;
 
 
 /**
@@ -36,26 +38,32 @@ import ai.grakn.graql.Pattern;
 
 public class Migrator {
 	
-	public static HashMap<OWLObjectProperty, Concept[]> relationTypes = new HashMap<OWLObjectProperty, Concept[]>();
-	public static HashMap<OWLClass, Entity> entities = new HashMap<OWLClass, Entity>();
-	
+	public static HashMap<OWLObjectProperty, String[]> relationTypes = new HashMap<OWLObjectProperty, String[]>();
+	public static HashMap<OWLClass, String> entities = new HashMap<OWLClass, String>();
+	public static int classCounter;
 	
 static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		
 		//registering some top-level predicates 
 		
-		EntityType snomedClass = graknGraph.putEntityType("snomed-class");
-		graknGraph.putResourceTypeUnique("snomed-uri", ResourceType.DataType.STRING);
-		graknGraph.putResourceType("label", ResourceType.DataType.STRING);
-		graknGraph.getEntityType("snomed-class").hasResource(graknGraph.getResourceType("label"));
-		graknGraph.getEntityType("snomed-class").hasResource(graknGraph.getResourceType("snomed-uri"));
+		EntityType owlClass = graknGraph.putEntityType("owl-class");
+		EntityType snomedClass = graknGraph.putEntityType("named-class");
+		EntityType intersectionClass = graknGraph.putEntityType("intersection-class");
+		EntityType existentialClass = graknGraph.putEntityType("existential-class");
+		snomedClass.superType(owlClass);
+		intersectionClass.superType(owlClass);
+		existentialClass.superType(owlClass);
+		ResourceType<String> snomedUriRes = graknGraph.putResourceType("snomed-uri", ResourceType.DataType.STRING);
+		ResourceType<String> snomedLabelRes = graknGraph.putResourceType("label", ResourceType.DataType.STRING);
+		owlClass.hasResource(snomedUriRes);
+		owlClass.hasResource(snomedLabelRes);
 		RelationType subclassing = graknGraph.putRelationType("subclassing");
 		RoleType subclass = graknGraph.putRoleType("subclass");
 		RoleType superclass = graknGraph.putRoleType("superclass");
 		subclassing.hasRole(subclass);
 		subclassing.hasRole(superclass);
-		snomedClass.playsRole(subclass);
-		snomedClass.playsRole(superclass);
+		owlClass.playsRole(subclass);
+		owlClass.playsRole(superclass);
 		graknGraph.putRuleType("property-chain");
 		graknGraph.putRuleType("property-inverse");
 		graknGraph.putRuleType("subclass-traversing");
@@ -65,41 +73,55 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		Pattern body = Graql.and(leftSub, rightSub);
 		Pattern head = Graql.var().isa(Graql.var("rel")).rel(Graql.var("rel-role-1"), "x").rel(Graql.var("rel-role-2"), "z");
 		graknGraph.getRuleType("subclass-traversing").addRule(body, head);
-
 		
-		//registering named OWL classes in SNOMED as entities 
-		
-		System.out.println("Registering classes and properties...");
-		
-		snomed.classesInSignature().forEach(snomedEntity -> {
-			String snomedUri = "snomed:" + shortName(snomedEntity);
-			Entity newEntity = graknGraph.getEntityType("snomed-class").addEntity();
-			newEntity.hasResource(graknGraph.getResourceType("snomed-uri").putResource(snomedUri));
-			newEntity.hasResource(graknGraph.getResourceType("label").putResource(getRdfsLabel(snomedEntity, snomed)));
-			entities.put(snomedEntity, newEntity);
-		});
 		
 		//registering named OWL properties in SNOMED as relations
-		
+		System.out.println("Registering properties...");
+	
 		snomed.objectPropertiesInSignature().forEach(snomedProperty -> {
-			String propertyName = getRdfsLabel(snomedProperty, snomed);
-			RelationType relation = graknGraph.putRelationType(propertyName);
-			RoleType from = graknGraph.putRoleType(propertyName + "-from");
-			RoleType to = graknGraph.putRoleType(propertyName + "-to");
+			String relationName = getLabel(snomedProperty, snomed);
+			String fromRoleName = relationName + "-from";
+			String toRoleName = relationName + "-to";
+			RelationType relation = graknGraph.putRelationType(relationName);
+			RoleType from = graknGraph.putRoleType(fromRoleName);
+			RoleType to = graknGraph.putRoleType(toRoleName);
 			relation.hasRole(from);
 			relation.hasRole(to);
-			snomedClass.playsRole(from);
-			snomedClass.playsRole(to);
-			Concept[] relationInfo = {relation, from, to}; 
+			owlClass.playsRole(from);
+			owlClass.playsRole(to);
+			String[] relationInfo = {relationName, fromRoleName, toRoleName}; 
 			relationTypes.put(snomedProperty, relationInfo);
 		});
 		
-		//Extracting and structuring information from OWL axioms in SNOMED
+		Main.commitGraph();
 		
+		
+		//registering named OWL classes in SNOMED as entities 
+		System.out.println("Registering classes...");
+		
+		snomed.classesInSignature().forEach(snomedNamedClass -> {
+			count();
+			String snomedUri = "snomed:" + shortName(snomedNamedClass);
+			String snomedLabel = getLabel(snomedNamedClass, snomed);
+			Var entityPattern = var().isa("named-class").has("snomed-uri", snomedUri).has("label", snomedLabel);
+			Main.loaderClient.add(insert(entityPattern));
+			entities.put(snomedNamedClass, snomedUri);
+		});
+		
+		Main.loaderClient.waitToFinish();
+		Main.commitGraph();
+		
+		//Extracting and structuring information from OWL axioms in SNOMED
 		System.out.println("Migrating Snomed axioms...");
-		OWL2GraknVisitor visitor = new OWL2GraknVisitor();
-		snomed.axioms().forEach(ax ->  ax.accept(visitor));
 	
+		OWL2GraknAxiomVisitor visitor = new OWL2GraknAxiomVisitor();
+		snomed.axioms().forEach(ax ->  {
+			ax.accept(visitor);
+			});
+		System.out.println("Waiting to finish...");
+		//Main.loaderClient.waitToFinish();
+		System.out.println("Final commit...");
+		Main.commitGraph();
 		
 		System.out.println("Migration completed.");
 	
@@ -110,11 +132,18 @@ public static String shortName(OWLEntity id) {
     return shortform.getShortForm(id); 
 }
 
-public static String getRdfsLabel(OWLEntity id, OWLOntology ontology) {
+public static String getLabel(OWLEntity id, OWLOntology ontology) {
 	OWLDataFactory df = OWLManager.createOWLOntologyManager().getOWLDataFactory();
 	OWLAnnotationProperty labProp = df.getRDFSLabel();
 	OWLAnnotationAssertionAxiom annAx = ontology.annotationAssertionAxioms((OWLAnnotationSubject) id.getIRI()).filter(ann -> ann.getAnnotation().getProperty().equals(labProp)).findFirst().orElse(null);
 	if (annAx!=null) return annAx.getAnnotation().getValue().toString().split("\"")[1].replace(" ", "-"); 
 	else return shortName(id); 
+}
+
+public static void count() {
+	classCounter++;
+	if (classCounter % 1000 == 0) {
+		System.out.println(classCounter/1000 + "K");
+	}
 }
 }
