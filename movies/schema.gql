@@ -96,17 +96,16 @@ insert
     has-role photography-director
     has-role costume-designer;
 "production-with-crew" sub role;
-"crew-member" sub role is-abstract;
-"director" sub crew-member; 
-"production-designer" sub crew-member;
-"composer" sub crew-member;
-"editor" sub crew-member;
-"animator" sub crew-member;
-"writer" sub crew-member;
-"costume-designer" sub crew-member;
-"producer" sub crew-member;
-"photography-director" sub crew-member;
-"art-director" sub crew-member;
+"director" sub role;
+"production-designer" sub role;
+"composer" sub role;
+"editor" sub role;
+"animator" sub role;
+"writer" sub role;
+"costume-designer" sub role;
+"producer" sub role;
+"photography-director" sub role;
+"art-director" sub role;
 
 "has-cast" sub relation
     has-role character-being-played
@@ -199,11 +198,33 @@ insert
 "production-with-stream" sub role;
 
 "person" sub entity
-    plays-role crew-member
+    # crew member roles
+    plays-role director
+    plays-role production-designer
+    plays-role composer
+    plays-role editor
+    plays-role animator
+    plays-role writer
+    plays-role costume-designer
+    plays-role producer
+    plays-role photography-director
+    plays-role art-director
+
+    # board member roles
+    plays-role ceo
+    plays-role founder
+    plays-role chairperson
+
+    # relative roles
+    plays-role spouse1
+    plays-role spouse2
+    plays-role parent
+    plays-role child
+    plays-role person-has-partner
+    plays-role partner
+
     plays-role actor
-    plays-role board-member
     plays-role character-being-played
-    plays-role relative
     plays-role nominee
     plays-role detailed-person
     plays-role keyword-person
@@ -225,26 +246,24 @@ insert
     has-resource has-spouse
     has-resource status
     has-resource homepage;
-"relative" sub role is-abstract;
 
 "marriage" sub relation  
     has-role spouse1
     has-role spouse2;
-"spouse" sub relative, is-abstract;
-"spouse1" sub spouse;
-"spouse2" sub spouse;
+"spouse1" sub role;
+"spouse2" sub role;
 
 "has-child" sub relation
     has-role parent
     has-role child;
-"parent" sub relative;
-"child" sub relative;
+"parent" sub role;
+"child" sub role;
 
 "has-partner" sub relation
     has-role person-has-partner
     has-role partner;
-"person-has-partner" sub relative;
-"partner" sub relative;
+"person-has-partner" sub role;
+"partner" sub role;
 
 "personal-details" sub relation
     has-role detailed-person
@@ -296,10 +315,9 @@ insert
     has-role founder
     has-role chairperson;
 "company-with-board" sub role;
-"board-member" sub role is-abstract;
-"ceo" sub board-member;
-"founder" sub board-member;
-"chairperson" sub board-member;
+"ceo" sub role;
+"founder" sub role;
+"chairperson" sub role;
 
 "company-has-headquarters-location" sub relation
     has-role company-with-headquarters
