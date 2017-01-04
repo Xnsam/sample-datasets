@@ -113,7 +113,6 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 	}	
 	
 	public void visit(OWLInverseObjectPropertiesAxiom ax) {
-		System.out.println("Axiom: " + ax);
 		String[] firstRelationInfo = Migrator.relationTypes.get(ax.getFirstProperty());
 		String[] secondRelationInfo = Migrator.relationTypes.get(ax.getSecondProperty());
 		RuleType ruleType = Main.graknGraph.getRuleType("property-inverse");

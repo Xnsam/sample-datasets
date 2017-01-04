@@ -1,5 +1,7 @@
 package ai.grakn.snomed2grakn.migrator;
 
+import static ai.grakn.migration.base.io.MigrationCLI.initiateShutdown;
+
 import java.io.File;
 import java.util.Arrays;
 
@@ -39,9 +41,18 @@ public class Main
     	graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
     	loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
     	
+    	System.out.println(args[0]);
+    	
+    	if (args.length==0) System.out.println("You must provide the name of the OWL file containing SNOMED-CT.");
+    	
     	//File input = new File("snomed_ct_full_inv.owl");
-        File input = new File("snomedSample.owl"); 
-		System.out.println(input.getAbsoluteFile());
+        File input = new File(args[0]);
+        		
+		if (!input.exists()) {
+			System.out.println("Could not find the file: " + input.getAbsoluteFile());
+			System.exit(0);
+		}
+		
 		try{
 			System.out.println("Loading SNOMED...");
 			OWLOntology ontology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(input);
