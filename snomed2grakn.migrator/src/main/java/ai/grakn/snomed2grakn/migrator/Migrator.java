@@ -3,6 +3,8 @@ package ai.grakn.snomed2grakn.migrator;
 import static ai.grakn.graql.Graql.insert;
 import static ai.grakn.graql.Graql.var;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -40,10 +42,14 @@ public class Migrator {
 	
 	public static HashMap<OWLObjectProperty, String[]> relationTypes = new HashMap<OWLObjectProperty, String[]>();
 	public static HashMap<OWLClass, String> entities = new HashMap<OWLClass, String>();
-	public static int classCounter;
+	public static int counter=0;
 	
 static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		
+	
+		Instant start = Instant.now();
+
+	
 		//registering some top-level predicates 
 		
 		EntityType owlClass = graknGraph.putEntityType("owl-class");
@@ -76,9 +82,10 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		
 		
 		//registering named OWL properties in SNOMED as relations
-		System.out.println("Registering properties...");
+		System.out.println("\nRegistering properties...");
 	
 		snomed.objectPropertiesInSignature().forEach(snomedProperty -> {
+			count();
 			String relationName = getLabel(snomedProperty, snomed);
 			String fromRoleName = relationName + "-from";
 			String toRoleName = relationName + "-to";
@@ -93,12 +100,14 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 			relationTypes.put(snomedProperty, relationInfo);
 		});
 		
+		System.out.println("\nProperties registered: " + counter);
+		
 		Main.commitGraph();
 		
 		
 		//registering named OWL classes in SNOMED as entities 
-		System.out.println("Registering classes...");
-		
+		System.out.println("\nRegistering classes...");
+		counter=0;
 		snomed.classesInSignature().forEach(snomedNamedClass -> {
 			count();
 			String snomedUri = "snomed:" + shortName(snomedNamedClass);
@@ -111,20 +120,22 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		Main.loaderClient.waitToFinish();
 		Main.commitGraph();
 		
+		System.out.println("\nClasses registered: " + counter);
+		
 		//Extracting and structuring information from OWL axioms in SNOMED
-		System.out.println("Migrating Snomed axioms...");
-	
+		System.out.println("\nMigrating SNOMED axioms...");
+		counter=0;
+		
 		OWL2GraknAxiomVisitor visitor = new OWL2GraknAxiomVisitor();
 		snomed.axioms().forEach(ax ->  {
+			count();
 			ax.accept(visitor);
 			});
-		System.out.println("Waiting to finish...");
 		Main.loaderClient.waitToFinish();
-		System.out.println("Final commit...");
 		Main.commitGraph();
-		
-		System.out.println("Migration completed.");
-	
+		System.out.println("\nAxioms migrated: " + counter);
+		Instant end = Instant.now();
+		System.out.println("\nMigration finished in: " + Duration.between(start, end));
 	}
     
 public static String shortName(OWLEntity id) {
@@ -141,9 +152,9 @@ public static String getLabel(OWLEntity id, OWLOntology ontology) {
 }
 
 public static void count() {
-	classCounter++;
-	if (classCounter % 1000 == 0) {
-		System.out.println(classCounter/1000 + "K");
+	counter++;
+	if (counter % 1000 == 0) {
+		System.out.print(counter/1000 + "K.. ");
 	}
 }
 }

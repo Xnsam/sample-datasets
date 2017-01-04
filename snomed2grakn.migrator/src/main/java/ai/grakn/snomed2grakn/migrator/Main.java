@@ -1,7 +1,5 @@
 package ai.grakn.snomed2grakn.migrator;
 
-import static ai.grakn.migration.base.io.MigrationCLI.initiateShutdown;
-
 import java.io.File;
 import java.util.Arrays;
 
@@ -38,20 +36,20 @@ public class Main
     	Logger logger = (Logger) org.slf4j.LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME); 
     	logger.setLevel(Level.OFF);
     	
-    	graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
-    	loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
+    	if (args.length==0) {
+    		System.out.println("You must provide the name of the OWL file containing SNOMED-CT.");
+    		System.exit(0);
+    	}
     	
-    	System.out.println(args[0]);
-    	
-    	if (args.length==0) System.out.println("You must provide the name of the OWL file containing SNOMED-CT.");
-    	
-    	//File input = new File("snomed_ct_full_inv.owl");
-        File input = new File(args[0]);
-        		
+    	File input = new File(args[0]);
+		
 		if (!input.exists()) {
 			System.out.println("Could not find the file: " + input.getAbsoluteFile());
 			System.exit(0);
 		}
+    	
+    	graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
+    	loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
 		
 		try{
 			System.out.println("Loading SNOMED...");
