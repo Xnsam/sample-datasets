@@ -24,7 +24,9 @@ import ai.grakn.concept.RelationType;
 import ai.grakn.concept.ResourceType;
 import ai.grakn.concept.RoleType;
 import ai.grakn.graql.Graql;
+import ai.grakn.graql.MatchQuery;
 import ai.grakn.graql.Pattern;
+import ai.grakn.graql.QueryBuilder;
 import ai.grakn.graql.Var;
 
 
@@ -48,7 +50,6 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		
 	
 		Instant start = Instant.now();
-
 	
 		//registering some top-level predicates 
 		
@@ -74,10 +75,10 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		graknGraph.putRuleType("property-inverse");
 		graknGraph.putRuleType("subclass-traversing");
 		
-		Pattern leftSub = Graql.var().isa("subclassing").rel("subclass", "x").rel("superclass", "y");
-		Pattern rightSub = Graql.var().isa(Graql.var("rel")).rel(Graql.var("rel-role-1"), "y").rel(Graql.var("rel-role-2"), "z");
+		Pattern leftSub = var().isa("subclassing").rel("subclass", "x").rel("superclass", "y");
+		Pattern rightSub = var().isa(var("rel")).rel(var("rel-role-1"), "y").rel(var("rel-role-2"), "z");
 		Pattern body = Graql.and(leftSub, rightSub);
-		Pattern head = Graql.var().isa(Graql.var("rel")).rel(Graql.var("rel-role-1"), "x").rel(Graql.var("rel-role-2"), "z");
+		Pattern head = var().isa(var("rel")).rel(var("rel-role-1"), "x").rel(var("rel-role-2"), "z");
 		graknGraph.getRuleType("subclass-traversing").addRule(body, head);
 		
 		
@@ -116,19 +117,26 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 			Main.loaderClient.add(insert(entityPattern));
 			entities.put(snomedNamedClass, snomedUri);
 		});
-		
+				
 		Main.loaderClient.waitToFinish();
 		Main.commitGraph();
+		
+		//retrieving Grakn IDs for registered classes
+		QueryBuilder qb = graknGraph.graql();
+		snomed.classesInSignature().forEach(snomedNamedClass -> {
+			String snomedUri = entities.get(snomedNamedClass);
+			MatchQuery idRetrieve = qb.match(var("x").has("snomed-uri", snomedUri));
+			entities.put(snomedNamedClass, idRetrieve.iterator().next().get("x").getId());
+		});		
 		
 		System.out.println("\nClasses registered: " + counter);
 		
 		//Extracting and structuring information from OWL axioms in SNOMED
-		System.out.println("\nMigrating SNOMED axioms...");
+		System.out.println("\nMigrating axioms...");
 		counter=0;
 		
 		OWL2GraknAxiomVisitor visitor = new OWL2GraknAxiomVisitor();
 		snomed.axioms().forEach(ax ->  {
-			count();
 			ax.accept(visitor);
 			});
 		Main.loaderClient.waitToFinish();
@@ -154,7 +162,7 @@ public static String getLabel(OWLEntity id, OWLOntology ontology) {
 public static void count() {
 	counter++;
 	if (counter % 1000 == 0) {
-		System.out.print(counter/1000 + "K.. ");
+		System.out.print(counter/1000 + "K..");
 	}
 }
 }
