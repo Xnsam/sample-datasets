@@ -45,6 +45,8 @@ public class Migrator {
 	public static HashMap<OWLObjectProperty, String[]> relationTypes = new HashMap<OWLObjectProperty, String[]>();
 	public static HashMap<OWLClass, String> entities = new HashMap<OWLClass, String>();
 	public static int counter=0;
+	public static OWLDataFactory df = OWLManager.createOWLOntologyManager().getOWLDataFactory();
+	public static OWLAnnotationProperty labProp = df.getRDFSLabel();
 	
 static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		
@@ -71,8 +73,9 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		subclassing.hasRole(superclass);
 		owlClass.playsRole(subclass);
 		owlClass.playsRole(superclass);
+		RelationType snomedTopProperty = graknGraph.putRelationType("owl-property").setAbstract(true);
 		graknGraph.putRuleType("property-chain");
-		graknGraph.putRuleType("property-inverse");
+		graknGraph.putRuleType("inverse-property");
 		graknGraph.putRuleType("subclass-traversing");
 		
 		Pattern leftSub = var().isa("subclassing").rel("subclass", "x").rel("superclass", "y");
@@ -97,6 +100,7 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 			relation.hasRole(to);
 			owlClass.playsRole(from);
 			owlClass.playsRole(to);
+			relation.superType(snomedTopProperty);
 			String[] relationInfo = {relationName, fromRoleName, toRoleName}; 
 			relationTypes.put(snomedProperty, relationInfo);
 		});
@@ -143,7 +147,7 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		Main.commitGraph();
 		System.out.println("\nAxioms migrated: " + counter);
 		Instant end = Instant.now();
-		System.out.println("\nMigration finished in: " + Duration.between(start, end));
+		System.out.println("\nMigration finished in: " + Duration.between(start, end)); 
 	}
     
 public static String shortName(OWLEntity id) {
@@ -152,11 +156,9 @@ public static String shortName(OWLEntity id) {
 }
 
 public static String getLabel(OWLEntity id, OWLOntology ontology) {
-	OWLDataFactory df = OWLManager.createOWLOntologyManager().getOWLDataFactory();
-	OWLAnnotationProperty labProp = df.getRDFSLabel();
 	OWLAnnotationAssertionAxiom annAx = ontology.annotationAssertionAxioms((OWLAnnotationSubject) id.getIRI()).filter(ann -> ann.getAnnotation().getProperty().equals(labProp)).findFirst().orElse(null);
 	if (annAx!=null) return annAx.getAnnotation().getValue().toString().split("\"")[1].replace(" ", "-"); 
-	else return shortName(id); 
+	return shortName(id); 
 }
 
 public static void count() {

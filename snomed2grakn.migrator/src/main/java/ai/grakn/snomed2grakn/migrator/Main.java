@@ -1,15 +1,13 @@
 package ai.grakn.snomed2grakn.migrator;
 
 import java.io.File;
-import java.util.Arrays;
-
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import ai.grakn.Grakn;
 import ai.grakn.GraknGraph;
-import ai.grakn.engine.loader.client.LoaderClient;
+import ai.grakn.engine.loader.LoaderImpl;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
@@ -29,7 +27,7 @@ public class Main
 {	
 	static String keyspace = "grakn";
 	public static GraknGraph graknGraph;
-	public static LoaderClient loaderClient;
+	public static LoaderImpl loaderClient;
 	
     public static void main( String[] args )
     {
@@ -49,7 +47,9 @@ public class Main
 		}
     	
     	graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
-    	loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
+    	//loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
+    	loaderClient = new LoaderImpl(keyspace);
+		loaderClient.setBatchSize(40);
 		
 		try{
 			System.out.println("Loading SNOMED...");

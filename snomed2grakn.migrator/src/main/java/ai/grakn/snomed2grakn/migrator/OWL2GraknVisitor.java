@@ -110,7 +110,7 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 		Migrator.count();
 		String[] firstRelationInfo = Migrator.relationTypes.get(ax.getFirstProperty());
 		String[] secondRelationInfo = Migrator.relationTypes.get(ax.getSecondProperty());
-		RuleType ruleType = Main.graknGraph.getRuleType("property-inverse");
+		RuleType ruleType = Main.graknGraph.getRuleType("inverse-property");
 		
 		Pattern body = var().isa(secondRelationInfo[0]).rel(secondRelationInfo[1], "x").rel(secondRelationInfo[2], "y");
 		Pattern head = var().isa(firstRelationInfo[0]).rel(firstRelationInfo[1], "y").rel(firstRelationInfo[2], "x");
