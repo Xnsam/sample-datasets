@@ -163,7 +163,7 @@ public static String shortName(OWLEntity id) {
 public static String getLabel(OWLEntity id, OWLOntology ontology) {
 	OWLAnnotationAssertionAxiom annAx = ontology.annotationAssertionAxioms((OWLAnnotationSubject) id.getIRI()).filter(ann -> ann.getAnnotation().getProperty().equals(labProp)).findFirst().orElse(null);
 	if (annAx!=null) return annAx.getAnnotation().getValue().toString().split("\"")[1].replace(" ", "-"); 
-	return shortName(id); 
+	else return shortName(id); 
 }
 
 public static void count() {
