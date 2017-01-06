@@ -74,21 +74,21 @@ static void migrateSNOMED (OWLOntology snomed, GraknGraph graknGraph) {
 		owlClass.playsRole(subclass);
 		owlClass.playsRole(superclass);
 		RelationType owlTopProperty = graknGraph.putRelationType("owl-property").setAbstract(true);
-		graknGraph.putRuleType("property-chain");
-		graknGraph.putRuleType("inverse-property");
-		graknGraph.putRuleType("inheritance");
-		
+		//graknGraph.putRuleType("property-chain").superType(graknGraph.admin().getMetaRuleInference());
+		//graknGraph.putRuleType("inverse-property").superType(graknGraph.admin().getMetaRuleInference());
+		//graknGraph.putRuleType("inheritance").superType(graknGraph.admin().getMetaRuleInference());
+			
 		Pattern atom1 = var().isa("subclassing").rel("subclass", "x").rel("superclass", "y");
 		Pattern atom2 = var().isa(var("rel")).rel(var("rel-role-1"), "y").rel(var("rel-role-2"), "z");
 		Pattern atom3 = var("rel").sub("owl-property");
 		Pattern body1 = Graql.and(atom1, atom2, atom3);
 		Pattern head1 = var().isa(var("rel")).rel(var("rel-role-1"), "x").rel(var("rel-role-2"), "z");
-		graknGraph.getRuleType("inheritance").addRule(body1, head1);
+		graknGraph.getRuleType("inference-rule").addRule(body1, head1);
 		Pattern atom4 = var().isa("subclassing").rel("subclass", "y").rel("superclass", "z");
 		Pattern body2 = Graql.and(atom1, atom4);
 		Pattern head2 = var().isa("subclassing").rel("subclass", "x").rel("superclass", "z");
-		graknGraph.getRuleType("inheritance").addRule(body2, head2);
-				
+		graknGraph.getRuleType("inference-rule").addRule(body2, head2);
+		
 		
 		//registering named OWL properties in SNOMED as relations
 		System.out.println("\nRegistering properties...");
