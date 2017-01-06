@@ -56,7 +56,8 @@ public class Main
 			OWLOntology ontology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(input);
 			Migrator.migrateSNOMED(ontology, graknGraph);
 			
-			graknGraph.close();			
+			graknGraph.close();
+			System.exit(0);
 		}
 		catch (OWLOntologyCreationException e) {
 			System.out.println("Could not load ontology: " + e.getMessage());
