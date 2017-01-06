@@ -15,7 +15,7 @@ https://www.dropbox.com/s/obgjayguwueo7sd/snomed_ct_full_inv.owl?dl=0
 
 
 
-TRANSLATION:
+TRANSLATION (please view in raw version):
 ------------
 
 The migrator implements a structural translation of OWL EL subclass axioms into a Grakn graph. Additionally property axioms are translated into Grakn subtype statements or rules. Basic reasoning tasks supported by OWL EL semantics are captured by corresponding Grakn rules. The details of the translation are outlined below.
