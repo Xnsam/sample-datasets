@@ -22,7 +22,6 @@ import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubObjectPropertyOfAxiom;
 import org.semanticweb.owlapi.model.OWLSubPropertyChainOfAxiom;
 
-import ai.grakn.concept.RuleType;
 import ai.grakn.graql.Graql;
 import ai.grakn.graql.Pattern;
 import ai.grakn.graql.Var;
@@ -95,7 +94,6 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 		if (subProperties.size()!=2) return;
 		String[] superRelationInfo = Migrator.relationTypes.get(ax.getSuperProperty().asOWLObjectProperty());
 		
-		RuleType ruleType = Main.graknGraph.getRuleType("property-chain");
 		String[] leftSubRelationInfo = Migrator.relationTypes.get(subProperties.get(0).asOWLObjectProperty());
 		String[] rightSubRelationInfo = Migrator.relationTypes.get(subProperties.get(1).asOWLObjectProperty());
 		
@@ -103,18 +101,17 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 	    Pattern rightSub = var().isa(rightSubRelationInfo[0]).rel(rightSubRelationInfo[1], "y").rel(rightSubRelationInfo[2], "z");
 	    Pattern body = Graql.and(leftSub, rightSub);
 	    Pattern head = var().isa(superRelationInfo[0]).rel(superRelationInfo[1], "x").rel(superRelationInfo[2], "z");
-	    ruleType.addRule(body, head);
+	    Main.graknGraph.getRuleType("inference-rule").addRule(body, head);
 	}	
 	
 	public void visit(OWLInverseObjectPropertiesAxiom ax) {
 		Migrator.count();
 		String[] firstRelationInfo = Migrator.relationTypes.get(ax.getFirstProperty());
 		String[] secondRelationInfo = Migrator.relationTypes.get(ax.getSecondProperty());
-		RuleType ruleType = Main.graknGraph.getRuleType("property-inverse");
 		
 		Pattern body = var().isa(secondRelationInfo[0]).rel(secondRelationInfo[1], "x").rel(secondRelationInfo[2], "y");
 		Pattern head = var().isa(firstRelationInfo[0]).rel(firstRelationInfo[1], "y").rel(firstRelationInfo[2], "x");
-		ruleType.addRule(body, head);
+		Main.graknGraph.getRuleType("inference-rule").addRule(body, head);
 	}	
 }
 
