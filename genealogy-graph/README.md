@@ -13,6 +13,10 @@ To load the ontology, make sure you have downloaded Grakn and started the Grakn 
 ../bin/graql.sh -f ./ontology.gql
 ```
 
+## basic-ontology.gql
+
+This is the basic ontology without any definitions for elements that can be inferred by Grakn. It is used by an example that illustrates CSV migration from the CSV files in the `/raw-data` directory, but should not be used for the full genealogy-graph demo.
+
 ## data.gql
    
 The data here is taken, with some modification, from the family relationships described in the [Lenzen Research paper](http://www.lenzenresearch.com/titusnarrlineage.pdf) entitled "The Maternal Line of Elizabeth (Niesz) Titus". (The data is in Graql format as a result of migration of the raw CSV data files, found in the /raw-data folder, using the loader.sh script therein.
