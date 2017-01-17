@@ -146,104 +146,115 @@ lhs
 rhs
 {(parent-in-law: $il, child-in-law: $y) isa in-laws;};
 
-isa inference-rule
+$grandParents1 isa inference-rule
 lhs
-{(grandparent: $x, grandchild: $y) isa grandparentship;
-$x has gender "female";
+{($p, son: $gc) isa parentship;
+(father: $gp, $p) isa parentship;
 }
 rhs
-{(grandmother: $x) isa grandparentship;};
+{(grandfather: $gp, grandson: $gc) isa grandparentship;};
 
-isa inference-rule
+$grandParents2 isa inference-rule
 lhs
-{(grandparent: $x, grandchild: $y) isa grandparentship;
-$x has gender "male";
+{($p, daughter: $gc) isa parentship;
+(father: $gp, $p) isa parentship;
 }
 rhs
-{(grandfather: $x) isa grandparentship;};
+{(grandfather: $gp, granddaughter: $gc) isa grandparentship;};
 
-isa inference-rule
+$grandParents3 isa inference-rule
 lhs
-{(grandchild: $x, grandparent: $y) isa grandparentship;
-$x has gender "male";
+{($p, daughter: $gc) isa parentship;
+(mother: $gp, $p) isa parentship;
 }
 rhs
-{(grandson: $x) isa grandparentship;};
+{(grandmother: $gp, granddaughter: $gc) isa grandparentship;};
 
-isa inference-rule
+$grandParents4 isa inference-rule
 lhs
-{(grandchild: $x, grandparent: $y) isa grandparentship;
-$x has gender "female";
+{($p, son: $gc) isa parentship;
+(mother: $gp, $p) isa parentship;
 }
 rhs
-{(granddaughter: $x) isa grandparentship;};
+{(grandmother: $gp, grandson: $gc) isa grandparentship;};
 
-isa inference-rule
+$genderizeParentships1 isa inference-rule
 lhs
-{(parent: $x, child: $y) isa parentship;
-$x has gender "female";
+{(parent: $p, child: $c) isa parentship;
+$p has gender "male";
+$c has gender "male";
 }
 rhs
-{(mother: $x) isa parentship;};
+{(father: $p, son: $c) isa parentship;};
 
-isa inference-rule
+$genderizeParentships2 isa inference-rule
 lhs
-{(parent: $x, child: $y) isa parentship;
-$x has gender "male";
+{(parent: $p, child: $c) isa parentship;
+$p has gender "male";
+$c has gender "female";
 }
 rhs
-{(father: $x) isa parentship;};
+{(father: $p, daughter: $c) isa parentship;};
 
-isa inference-rule
+$genderizeParentships3 isa inference-rule
 lhs
-{(child: $x, parent: $y) isa parentship;
-$x has gender "female";
+{(parent: $p, child: $c) isa parentship;
+$p has gender "female";
+$c has gender "male";
 }
 rhs
-{(daughter: $x) isa parentship;};
+{(mother: $p, son: $c) isa parentship;};
 
-isa inference-rule
+$genderizeParentships4 isa inference-rule
 lhs
-{(child: $x, parent: $y) isa parentship;
-$x has gender "male";
+{(parent: $p, child: $c) isa parentship;
+$p has gender "female";
+$c has gender "female";
 }
 rhs
-{(son: $x) isa parentship;};
+{(mother: $p, daughter: $c) isa parentship;};
 
-isa inference-rule
+$genderizeMarriages isa inference-rule
 lhs
-{($x, $y) isa marriage; $x has gender "female"; $y has gender "male";}
-rhs
-{(wife: $x, husband: $y) isa marriage;};
-
-isa inference-rule
-lhs
-{(parent-in-law: $x, child-in-law: $y) isa in-laws;
-$x has gender "male";
+{(spouse1: $s1, spouse2: $s2) isa marriage;
+$s1 has gender "male";
 }
 rhs
-{(father-in-law: $x) isa in-laws;};
+{(husband: $s1, wife: $s2) isa marriage;};
 
-isa inference-rule
+$genderizeMarriages2 isa inference-rule
 lhs
-{(parent-in-law: $x, child-in-law: $y) isa in-laws;
-$x has gender "female";
+{(spouse1: $s1, spouse2: $s2) isa marriage;
+$s1 has gender "female";
 }
 rhs
-{(mother-in-law: $x) isa in-laws;};
+{(husband: $s2, wife: $s1) isa marriage;};
 
-isa inference-rule
+$inLaws1 isa inference-rule
 lhs
-{(child-in-law: $x, parent-in-law: $y) isa in-laws;
-$x has gender "male";
-}
+{(husband: $x, wife: $y) isa marriage;
+(mother: $il, $y) isa parentship;}
 rhs
-{(son-in-law: $x) isa in-laws;};
+{(mother-in-law: $il, son-in-law: $x) isa in-laws;};
 
-isa inference-rule
+$inLaws2 isa inference-rule
 lhs
-{(child-in-law: $x, parent-in-law: $y) isa in-laws;
-$x has gender "female";
-}
+{(husband: $x, wife: $y) isa marriage;
+(father: $il, $y) isa parentship;}
 rhs
-{(daughter-in-law: $x) isa in-laws;};
+{(father-in-law: $il, son-in-law: $x) isa in-laws;};
+
+$inLaws3 isa inference-rule
+lhs
+{(husband: $x, wife: $y) isa marriage;
+(father: $il, child: $y) isa parentship;}
+rhs
+{(father-in-law: $il, daughter-in-law: $y) isa in-laws;};
+
+$inLaws4 isa inference-rule
+lhs
+{(husband: $x, wife: $y) isa marriage;
+(mother: $il, child: $y) isa parentship;}
+rhs
+{(mother-in-law: $il, daughter-in-law: $y) isa in-laws;};
+
