@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ai.grakn.concept.ConceptId;
 import org.semanticweb.owlapi.model.OWLAxiomVisitor;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassExpression;
@@ -128,7 +129,7 @@ class OWL2GraknExpressionVisitor implements OWLClassExpressionVisitorEx<Snomed2G
 	
 	public Snomed2GraknPattern visit(OWLClass exp) {
 		String classVar = getNewVarName();
-		String graknId = Migrator.entities.get(exp);
+		ConceptId graknId = ConceptId.of(Migrator.entities.get(exp));
 		Var insertPattern = var(classVar).id(graknId);
 		return new Snomed2GraknPattern(insertPattern, classVar);
 	}

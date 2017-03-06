@@ -1,13 +1,14 @@
 package ai.grakn.snomed2grakn.migrator;
 
 import java.io.File;
+
+import ai.grakn.client.LoaderClient;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import ai.grakn.Grakn;
 import ai.grakn.GraknGraph;
-import ai.grakn.engine.loader.LoaderImpl;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 
@@ -27,7 +28,7 @@ public class Main
 {	
 	static String keyspace = "grakn";
 	public static GraknGraph graknGraph;
-	public static LoaderImpl loaderClient;
+	public static LoaderClient loaderClient;
 	
     public static void main( String[] args )
     {
@@ -45,17 +46,16 @@ public class Main
 			System.out.println("Could not find the file: " + input.getAbsoluteFile());
 			System.exit(0);
 		}
-    	
-    	graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
-    	//loaderClient = new LoaderClient(keyspace, Arrays.asList(Grakn.DEFAULT_URI));
-    	loaderClient = new LoaderImpl(keyspace);
-		loaderClient.setBatchSize(40);
+
+		graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
+    	loaderClient = new LoaderClient(keyspace, Grakn.DEFAULT_URI);
 		
 		try{
 			System.out.println("Loading SNOMED...");
 			OWLOntology ontology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(input);
 			Migrator.migrateSNOMED(ontology, graknGraph);
-			
+
+			commitGraph();
 			graknGraph.close();
 			System.exit(0);
 		}
