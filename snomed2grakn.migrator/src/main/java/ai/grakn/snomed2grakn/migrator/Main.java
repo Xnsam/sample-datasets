@@ -2,6 +2,7 @@ package ai.grakn.snomed2grakn.migrator;
 
 import java.io.File;
 
+import ai.grakn.GraknTxType;
 import ai.grakn.client.LoaderClient;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
@@ -47,30 +48,25 @@ public class Main
 			System.exit(0);
 		}
 
-		graknGraph = Grakn.factory(Grakn.DEFAULT_URI, keyspace).getGraph();
+		graknGraph = Grakn.session(Grakn.DEFAULT_URI, keyspace).open(GraknTxType.WRITE);
     	loaderClient = new LoaderClient(keyspace, Grakn.DEFAULT_URI);
-		
+		//graknGraph.commitOnClose();
+
 		try{
 			System.out.println("Loading SNOMED...");
 			OWLOntology ontology = OWLManager.createOWLOntologyManager().loadOntologyFromOntologyDocument(input);
 			Migrator.migrateSNOMED(ontology, graknGraph);
 
-			commitGraph();
-			graknGraph.close();
+			graknGraph.commit();
 			System.exit(0);
 		}
 		catch (OWLOntologyCreationException e) {
 			System.out.println("Could not load ontology: " + e.getMessage());
 		} 
 	}
-    
-    public static void commitGraph()
-    {
-    	try {
-			graknGraph.commit();
-		}
-		catch (Exception ex) {
-			System.out.println(ex);
-		};
-    }
+
+	public static void graphCommitReopen() {
+		graknGraph.commit();
+		graknGraph = Grakn.session(Grakn.DEFAULT_URI, keyspace).open(GraknTxType.WRITE);
+	}
 }

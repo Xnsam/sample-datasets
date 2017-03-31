@@ -102,7 +102,7 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 	    Pattern rightSub = var().isa(rightSubRelationInfo[0]).rel(rightSubRelationInfo[1], "y").rel(rightSubRelationInfo[2], "z");
 	    Pattern body = Graql.and(leftSub, rightSub);
 	    Pattern head = var().isa(superRelationInfo[0]).rel(superRelationInfo[1], "x").rel(superRelationInfo[2], "z");
-	    Main.graknGraph.getRuleType("inference-rule").addRule(body, head);
+	    Main.graknGraph.getRuleType("inference-rule").putRule(body, head);
 	}	
 	
 	public void visit(OWLInverseObjectPropertiesAxiom ax) {
@@ -112,8 +112,8 @@ class OWL2GraknAxiomVisitor implements OWLAxiomVisitor {
 		
 		Pattern body = var().isa(secondRelationInfo[0]).rel(secondRelationInfo[1], "x").rel(secondRelationInfo[2], "y");
 		Pattern head = var().isa(firstRelationInfo[0]).rel(firstRelationInfo[1], "y").rel(firstRelationInfo[2], "x");
-		Main.graknGraph.getRuleType("inference-rule").addRule(body, head);
-		Main.graknGraph.getRuleType("inference-rule").addRule(head, body);
+		Main.graknGraph.getRuleType("inference-rule").putRule(body, head);
+		Main.graknGraph.getRuleType("inference-rule").putRule(head, body);
 	}	
 }
 
