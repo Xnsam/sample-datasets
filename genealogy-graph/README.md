@@ -1,4 +1,6 @@
-This example project is described in more detail at https://medium.com/@doctormiko/1bb639396a24#.becpcqqi1
+**WARNING**: This project is a legacy one that is no longer actively maintained. It is superseded by example code that is used throughout the GRAKN.AI documentation. To find out more, it is best to go to the [Quickstart Tutorial](https://grakn.ai/pages/documentation/get-started/quickstart-tutorial.html).
+
+When this example project was initially created, it was described in more detail at https://medium.com/@doctormiko/1bb639396a24#.becpcqqi1. Syntax changes mean that the article is no longer working, but the concepts are still valid, and a good starting point for those wanting to learn more about GRAKN.AI.  We recommend that you look at the full [documentation](https://grakn.ai/pages/index.html) for up-to-date information and [blog](https://blog.grakn.ai) for additional tutorials.
 
 
 ## ontology.gql
