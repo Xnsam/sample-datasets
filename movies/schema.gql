@@ -2,99 +2,99 @@ insert
 "production" sub entity
 	is-abstract
 	## Filming details
-	plays-role production-with-crew
-    plays-role production-with-cast
-    plays-role production-with-company
+	plays production-with-crew
+    plays production-with-cast
+    plays production-with-company
 
-    plays-role production-with-location
+    plays production-with-location
 
-    plays-role production-with-language
+    plays production-with-language
 
     ## Reactions
-    plays-role production-with-certificate
-    plays-role nominee
+    plays production-with-certificate
+    plays nominee
 
-    plays-role subject-with-review 
+    plays subject-with-review 
 
     ## Indexing details
-    plays-role production-with-genre
-    plays-role production-with-mood
-    plays-role production-with-cluster
-    plays-role subject-with-keyword
+    plays production-with-genre
+    plays production-with-mood
+    plays production-with-cluster
+    plays subject-with-keyword
 
-    plays-role production-with-stream
+    plays production-with-stream
 
-	has-resource title
-    has-resource original-title
-    has-resource alternate-titles
+	has title
+    has original-title
+    has alternate-titles
     
-    has-resource instance-id
-    has-resource imdb-vote 
-    has-resource rotten-tomatoes-critic-rating 
-    has-resource rotten-tomatoes-critic-fresh-votes 
-    has-resource rotten-tomatoes-critic-rotten-votes 
-    has-resource rotten-tomatoes-critic-total-votes 
-    has-resource rotten-tomatoes-user-rating 
-    has-resource rotten-tomatoes-user-total-votes 
-    has-resource rotten-tomatoes-user-meter 
-    has-resource rotten-tomatoes-total-meter 
-    has-resource rotten-tomatoes-url 
-    has-resource free-web-sources 
-    has-resource free-ios-sources 
-    has-resource free-android-sources 
-    has-resource tv-everywhere-web-sources 
-    has-resource tv-everywhere-ios-sources 
-    has-resource tv-everywhere-android-sources 
-    has-resource subscription-web-sources 
-    has-resource subscription-ios-sources 
-    has-resource subscription-android-sources 
-    has-resource purchase-web-sources 
-    has-resource purchase-ios-sources 
-    has-resource purchase-android-sources 
-    has-resource guidebox-web-trailer 
-    has-resource guidebox-ios-trailer 
-    has-resource guidebox-android-trailer 
-    has-resource youtube-trailer 
-    has-resource tmdb-id 
-    has-resource guidebox-id 
-    has-resource imdb-identifier 
-    has-resource freebase-identifier 
-    has-resource wikidata-id 
-    has-resource tagline 
-    has-resource metacritic-link 
-    has-resource images 
-    has-resource alternate-versions 
-    has-resource backdrops 
-    has-resource revenue 
-    has-resource budget 
-    has-resource soundtracks 
-    has-resource runtime  
-    has-resource metascore 
-    has-resource tmdb-popularity 
-    has-resource tmdb-vote-count 
-    has-resource tmdb-vote-average 
-    has-resource status 
-    has-resource links 
-    has-resource overview 
-    has-resource release-date;
+    has instance-id
+    has imdb-vote 
+    has rotten-tomatoes-critic-rating 
+    has rotten-tomatoes-critic-fresh-votes 
+    has rotten-tomatoes-critic-rotten-votes 
+    has rotten-tomatoes-critic-total-votes 
+    has rotten-tomatoes-user-rating 
+    has rotten-tomatoes-user-total-votes 
+    has rotten-tomatoes-user-meter 
+    has rotten-tomatoes-total-meter 
+    has rotten-tomatoes-url 
+    has free-web-sources 
+    has free-ios-sources 
+    has free-android-sources 
+    has tv-everywhere-web-sources 
+    has tv-everywhere-ios-sources 
+    has tv-everywhere-android-sources 
+    has subscription-web-sources 
+    has subscription-ios-sources 
+    has subscription-android-sources 
+    has purchase-web-sources 
+    has purchase-ios-sources 
+    has purchase-android-sources 
+    has guidebox-web-trailer 
+    has guidebox-ios-trailer 
+    has guidebox-android-trailer 
+    has youtube-trailer 
+    has tmdb-id 
+    has guidebox-id 
+    has imdb-identifier 
+    has freebase-identifier 
+    has wikidata-id 
+    has tagline 
+    has metacritic-link 
+    has images 
+    has alternate-versions 
+    has backdrops 
+    has revenue 
+    has budget 
+    has soundtracks 
+    has runtime  
+    has metascore 
+    has tmdb-popularity 
+    has tmdb-vote-count 
+    has tmdb-vote-average 
+    has status 
+    has links 
+    has overview 
+    has release-date;
 
 "movie" sub production 
-    plays-role movie-with-keyword-person; 
+    plays movie-with-keyword-person; 
 
 "tv-series" sub production;
 
 "production-crew" sub relation
-    has-role production-with-crew
-    has-role director
-    has-role production-designer
-    has-role composer
-    has-role editor
-    has-role animator
-    has-role writer
-    has-role producer
-    has-role art-director
-    has-role photography-director
-    has-role costume-designer;
+    relates production-with-crew
+    relates director
+    relates production-designer
+    relates composer
+    relates editor
+    relates animator
+    relates writer
+    relates producer
+    relates art-director
+    relates photography-director
+    relates costume-designer;
 "production-with-crew" sub role;
 "director" sub role;
 "production-designer" sub role;
@@ -108,170 +108,170 @@ insert
 "art-director" sub role;
 
 "has-cast" sub relation
-    has-role character-being-played
-    has-role actor
-    has-role production-with-cast
-    has-resource billing-number;
+    relates character-being-played
+    relates actor
+    relates production-with-cast
+    has billing-number;
 "character-being-played" sub role;
 "actor" sub role;
 "production-with-cast" sub role;
 
 "has-production-company" sub relation
-    has-role production-with-company
-    has-role production-company;
+    relates production-with-company
+    relates production-company;
 "production-with-company" sub role;
 "production-company" sub role;
 
 "production-location" sub relation
-    has-role production-with-location
-    has-role location-of-subject
-    has-role filming-location
-    has-role narrative-location;
+    relates production-with-location
+    relates location-of-subject
+    relates filming-location
+    relates narrative-location;
 "production-with-location" sub role;
 "location-of-subject" sub role;
 "narrative-location" sub role;
 "filming-location" sub role;
 
 "production-language" sub relation
-    has-role production-with-language
-    has-role language-of-subject
-    has-role original-language
-    has-role translation;
+    relates production-with-language
+    relates language-of-subject
+    relates original-language
+    relates translation;
 "production-with-language" sub role;
 "language-of-subject" sub role;
 "original-language" sub role;
 "translation" sub role;
 
 "has-certificate" sub relation
-    has-role production-with-certificate
-    has-role certificate-of-production;
+    relates production-with-certificate
+    relates certificate-of-production;
 "production-with-certificate" sub role;
 "certificate-of-production" sub role;
 
 
 "accolade" sub relation
-    has-role nominee
-    has-role award-of-subject
-    has-role nominated-award;
+    relates nominee
+    relates award-of-subject
+    relates nominated-award;
 "nominee" sub role;
 "award-of-subject" sub role;
 "nominated-award" sub role;
 
 "has-review" sub relation
-    has-role subject-with-review
-    has-role review-of-subject;
+    relates subject-with-review
+    relates review-of-subject;
 "subject-with-review" sub role;
 "review-of-subject" sub role;
 
 "has-genre" sub relation
-    has-role production-with-genre
-    has-role genre-of-production;
+    relates production-with-genre
+    relates genre-of-production;
 "production-with-genre" sub role;
 "genre-of-production" sub role;
 
 "has-mood" sub relation
-    has-role production-with-mood
-    has-role mood-of-production
-    has-resource weight;
+    relates production-with-mood
+    relates mood-of-production
+    has weight;
 "production-with-mood" sub role;
 "mood-of-production" sub role;
 
 "has-cluster" sub relation
-    has-role production-with-cluster
-    has-role cluster-of-production
-    has-resource weight;
+    relates production-with-cluster
+    relates cluster-of-production
+    has weight;
 "production-with-cluster" sub role;
 "cluster-of-production" sub role;
 
 "has-keyword" sub relation
-    has-role subject-with-keyword
-    has-role keyword-of-subject;
+    relates subject-with-keyword
+    relates keyword-of-subject;
 "subject-with-keyword" sub role;
 "keyword-of-subject" sub role;
 
 "has-streaming-service" sub relation
-    has-role streaming-provider
-    has-role streaming-url-role
-    has-role production-with-stream;
+    relates streaming-provider
+    relates streaming-url-role
+    relates production-with-stream;
 "streaming-provider" sub role;
 "streaming-url-role" sub role;
 "production-with-stream" sub role;
 
 "person" sub entity
     # crew member roles
-    plays-role director
-    plays-role production-designer
-    plays-role composer
-    plays-role editor
-    plays-role animator
-    plays-role writer
-    plays-role costume-designer
-    plays-role producer
-    plays-role photography-director
-    plays-role art-director
+    plays director
+    plays production-designer
+    plays composer
+    plays editor
+    plays animator
+    plays writer
+    plays costume-designer
+    plays producer
+    plays photography-director
+    plays art-director
 
     # board member roles
-    plays-role ceo
-    plays-role founder
-    plays-role chairperson
+    plays ceo
+    plays founder
+    plays chairperson
 
     # relative roles
-    plays-role spouse1
-    plays-role spouse2
-    plays-role parent
-    plays-role child
-    plays-role person-has-partner
-    plays-role partner
+    plays spouse1
+    plays spouse2
+    plays parent
+    plays child
+    plays person-has-partner
+    plays partner
 
-    plays-role actor
-    plays-role character-being-played
-    plays-role nominee
-    plays-role detailed-person
-    plays-role keyword-person
+    plays actor
+    plays character-being-played
+    plays nominee
+    plays detailed-person
+    plays keyword-person
     
-    has-resource instance-id
-    has-resource name
-    has-resource imdb-identifier
-    has-resource images
-    has-resource birthday
-    has-resource also-known-as
-    has-resource cause-of-death
-    has-resource place-of-birth
-    has-resource biography
-    has-resource child-string
-    has-resource gender
-    has-resource freebase-identifier
-    has-resource residence
-    has-resource deathday
-    has-resource has-spouse
-    has-resource status
-    has-resource homepage;
+    has instance-id
+    has name
+    has imdb-identifier
+    has images
+    has birthday
+    has also-known-as
+    has cause-of-death
+    has place-of-birth
+    has biography
+    has child-string
+    has gender
+    has freebase-identifier
+    has residence
+    has deathday
+    has has-spouse
+    has status
+    has homepage;
 
 "marriage" sub relation  
-    has-role spouse1
-    has-role spouse2;
+    relates spouse1
+    relates spouse2;
 "spouse1" sub role;
 "spouse2" sub role;
 
 "has-child" sub relation
-    has-role parent
-    has-role child;
+    relates parent
+    relates child;
 "parent" sub role;
 "child" sub role;
 
 "has-partner" sub relation
-    has-role person-has-partner
-    has-role partner;
+    relates person-has-partner
+    relates partner;
 "person-has-partner" sub role;
 "partner" sub role;
 
 "personal-details" sub relation
-    has-role detailed-person
-    has-role country-of-citizenship
-    has-role education-company
-    has-role occupation-of-person
-    has-role location-of-birth
-    has-role location-of-death;
+    relates detailed-person
+    relates country-of-citizenship
+    relates education-company
+    relates occupation-of-person
+    relates location-of-birth
+    relates location-of-death;
 "detailed-person" sub role;
 "country-of-citizenship" sub role;
 "education-company" sub role;
@@ -280,134 +280,134 @@ insert
 "location-of-death" sub role;
 
 "person-via-keyword" sub relation
-    has-role keyword-person
-    has-role movie-with-keyword-person;
+    relates keyword-person
+    relates movie-with-keyword-person;
 "keyword-person" sub role;
 "movie-with-keyword-person" sub role;
 
 "company" sub entity
-    plays-role production-company
-    plays-role streaming-provider
-    plays-role education-company
+    plays production-company
+    plays streaming-provider
+    plays education-company
 
-    plays-role company-with-board
+    plays company-with-board
 
-    plays-role company-with-headquarters
+    plays company-with-headquarters
 
-    plays-role nominee
+    plays nominee
     
-    has-resource instance-id
-    has-resource parent-company
-    has-resource industry
-    has-resource headquarters
-    has-resource freebase-identifier
-    has-resource inception
-    has-resource dissolved
-    has-resource owned-by
-    has-resource images
-    has-resource homepage
-    has-resource imdb-identifier
-    has-resource name;
+    has instance-id
+    has parent-company
+    has industry
+    has headquarters
+    has freebase-identifier
+    has inception
+    has dissolved
+    has owned-by
+    has images
+    has homepage
+    has imdb-identifier
+    has name;
 
 "company-board" sub relation
-    has-role company-with-board
-    has-role ceo
-    has-role founder
-    has-role chairperson;
+    relates company-with-board
+    relates ceo
+    relates founder
+    relates chairperson;
 "company-with-board" sub role;
 "ceo" sub role;
 "founder" sub role;
 "chairperson" sub role;
 
 "company-has-headquarters-location" sub relation
-    has-role company-with-headquarters
-    has-role location-of-headquarters;
+    relates company-with-headquarters
+    relates location-of-headquarters;
 "company-with-headquarters" sub role;
 "location-of-headquarters" sub role;
 
 "location" sub entity
-    plays-role parent-of-feature
-    plays-role location-of-headquarters
-    plays-role location-of-birth
-    plays-role location-of-death
-    plays-role location-of-subject
-    plays-role narrative-location
-    plays-role filming-location
-    plays-role country-of-citizenship
-    has-resource name
-    has-resource instance-id;
+    plays parent-of-feature
+    plays location-of-headquarters
+    plays location-of-birth
+    plays location-of-death
+    plays location-of-subject
+    plays narrative-location
+    plays filming-location
+    plays country-of-citizenship
+    has name
+    has instance-id;
 
 "country" sub location 
-    has-resource iso-3166;
+    has iso-3166;
 
 "language" sub entity
-    plays-role language-of-subject
-    plays-role original-language
-    plays-role translation
-    has-resource name
-    has-resource iso-639-1
-    has-resource iso-639-2
-    has-resource iso-639-3
-    has-resource wikimedia-language-code
-    has-resource instance-id;
+    plays language-of-subject
+    plays original-language
+    plays translation
+    has name
+    has iso-639-1
+    has iso-639-2
+    has iso-639-3
+    has wikimedia-language-code
+    has instance-id;
 
 "award" sub entity
-    plays-role award-of-subject
-    plays-role nominated-award
-    has-resource description
-    has-resource name
-    has-resource instance-id;
+    plays award-of-subject
+    plays nominated-award
+    has description
+    has name
+    has instance-id;
 
 "parent-feature" sub relation
-    has-role parent-of-feature
-    has-role child-of-feature;
+    relates parent-of-feature
+    relates child-of-feature;
 "parent-of-feature" sub role;
 "child-of-feature" sub role;
 
 "character" sub entity 
-    plays-role character-being-played
-    has-resource name
-    has-resource instance-id;
+    plays character-being-played
+    has name
+    has instance-id;
 
 "certificate" sub entity
-    plays-role certificate-of-production
-    has-resource description
-    has-resource instance-id;
+    plays certificate-of-production
+    has description
+    has instance-id;
 
 "genre" sub entity
-    plays-role genre-of-production
-    has-resource weight
-    has-resource description
-    has-resource instance-id;
+    plays genre-of-production
+    has weight
+    has description
+    has instance-id;
 
 "keyword" sub entity
-    plays-role keyword-of-subject
-    has-resource name
-    has-resource weight
-    has-resource instance-id;
+    plays keyword-of-subject
+    has name
+    has weight
+    has instance-id;
 
 "review" sub entity
-    plays-role review-of-subject
-    has-resource content
-    has-resource media
-    has-resource author
-    has-resource instance-id;
+    plays review-of-subject
+    has content
+    has media
+    has author
+    has instance-id;
  
 "occupation" sub entity
-    plays-role occupation-of-person
-    has-resource description
-    has-resource instance-id;
+    plays occupation-of-person
+    has description
+    has instance-id;
 
 "cluster" sub entity
-    plays-role cluster-of-production
-    has-resource description
-    has-resource cluster-id
-    has-resource instance-id;
+    plays cluster-of-production
+    has description
+    has cluster-id
+    has instance-id;
 
 "mood" sub entity
-    plays-role mood-of-production
-    has-resource description
-    has-resource instance-id;
+    plays mood-of-production
+    has description
+    has instance-id;
 
 
 ### RESOURCE TYPES:
@@ -653,9 +653,9 @@ insert
     datatype long;
 
 "streaming-url" sub entity 
-    has-resource url
-    plays-role streaming-url-role
-    has-resource instance-id; 
+    has url
+    plays streaming-url-role
+    has instance-id; 
 
 "url" sub resource
     datatype string;
