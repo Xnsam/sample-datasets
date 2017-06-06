@@ -2,9 +2,9 @@ insert
 
 # Resources
 gender sub resource datatype string;
-date sub resource datatype string;
-birth-date sub date;
-death-date sub date;
+"date" sub resource datatype string;
+birth-date sub "date";
+death-date sub "date";
 name sub resource datatype string;
 firstname sub name;
 middlename sub name;
@@ -110,7 +110,7 @@ marriage sub relatives
 	has-role spouse2
 	has-role husband
 	has-role wife
-	has-resource date;
+	has-resource "date";
 
 spouse sub role is-abstract;
 generic-spouse sub spouse is-abstract;
