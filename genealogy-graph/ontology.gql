@@ -26,78 +26,78 @@ degree sub resource datatype long;
 # Entities
 
 person sub entity
-	plays-role protagonist
-	plays-role spouse1
-	plays-role spouse2
-	plays-role wife
-	plays-role husband
-	plays-role granddaughter
-	plays-role grandson
-	plays-role father-in-law
-	plays-role mother-in-law
-	plays-role daughter-in-law
-	plays-role son-in-law
-	plays-role son
-	plays-role daughter
-	plays-role parent
-	plays-role child
-	plays-role sibling1
-	plays-role sibling2
-	plays-role grandparent
-	plays-role grandchild
-	plays-role cousin1
-	plays-role cousin2
-	plays-role child-in-law
-	plays-role parent-in-law
-	plays-role mother
-	plays-role father
-	plays-role grandmother
-	plays-role grandfather
-	has-resource age
-	has-resource gender
-	has-resource birth-date
-	has-resource death-date
-	has-resource identifier
-	has-resource firstname
-	has-resource middlename
-	has-resource surname;
+	plays protagonist
+	plays spouse1
+	plays spouse2
+	plays wife
+	plays husband
+	plays granddaughter
+	plays grandson
+	plays father-in-law
+	plays mother-in-law
+	plays daughter-in-law
+	plays son-in-law
+	plays son
+	plays daughter
+	plays parent
+	plays child
+	plays sibling1
+	plays sibling2
+	plays grandparent
+	plays grandchild
+	plays cousin1
+	plays cousin2
+	plays child-in-law
+	plays parent-in-law
+	plays mother
+	plays father
+	plays grandmother
+	plays grandfather
+	has age
+	has gender
+	has birth-date
+	has death-date
+	has identifier
+	has firstname
+	has middlename
+	has surname;
 
 event sub entity
 	is-abstract
-	plays-role conclusion
-	plays-role happening
-	has-resource degree
-	has-resource confidence
-	has-resource date
-	has-resource identifier
-	has-resource notes;
+	plays conclusion
+	plays happening
+	has degree
+	has confidence
+	has "date"
+	has identifier
+	has notes;
 
 birth sub event
-	has-resource firstname
-	has-resource middlename
-	has-resource surname
-	has-resource gender
-	has-resource birth-date;
+	has firstname
+	has middlename
+	has surname
+	has gender
+	has birth-date;
 
 death sub event
-	has-resource death-date
-	has-resource age;
+	has death-date
+	has age;
 
 wedding sub event;
 
 document sub entity
-	plays-role evidence
-	has-resource identifier
-	has-resource document-location
-	has-resource document-type
-	has-resource notes;
+	plays evidence
+	has identifier
+	has document-location
+	has document-type
+	has notes;
 
 # Relations and Roles
 
 event-protagonist sub relation
-	has-role happening
-	has-role protagonist
-	has-resource function;
+	relates happening
+	relates protagonist
+	has function;
 
 happening sub role;
 protagonist sub role;
@@ -106,11 +106,11 @@ relatives sub relation
 	is-abstract;
 
 marriage sub relatives
-	has-role spouse1
-	has-role spouse2
-	has-role husband
-	has-role wife
-	has-resource "date";
+	relates spouse1
+	relates spouse2
+	relates husband
+	relates wife
+	has "date";
 
 spouse sub role is-abstract;
 generic-spouse sub spouse is-abstract;
@@ -120,12 +120,12 @@ husband sub spouse;
 wife sub spouse;
 
 parentship sub relatives
-	has-role parent
-	has-role mother
-	has-role father
-	has-role child
-	has-role son
-	has-role daughter;
+	relates parent
+	relates mother
+	relates father
+	relates child
+	relates son
+	relates daughter;
 
 parent sub role;
 mother sub parent;
@@ -135,20 +135,20 @@ son sub child;
 daughter sub child;
 
 siblings sub relatives
-	has-role sibling1
-	has-role sibling2;
+	relates sibling1
+	relates sibling2;
 
 sibling sub role is-abstract;
 sibling1 sub sibling;
 sibling2 sub sibling;
 
 grandparentship sub relatives
-	has-role grandparent
-	has-role grandfather
-	has-role grandmother
-	has-role grandchild
-	has-role granddaughter
-	has-role grandson;
+	relates grandparent
+	relates grandfather
+	relates grandmother
+	relates grandchild
+	relates granddaughter
+	relates grandson;
 
 grandparent sub role;
 grandfather sub grandparent;
@@ -158,20 +158,20 @@ grandson sub grandchild;
 granddaughter sub grandchild;
 
 cousins sub relatives
-	has-role cousin1
-	has-role cousin2;
+	relates cousin1
+	relates cousin2;
 
 cousin sub role is-abstract;
 cousin1 sub cousin;
 cousin2 sub cousin;
 
 in-laws sub relatives
-	has-role child-in-law
-	has-role son-in-law
-	has-role daughter-in-law
-	has-role parent-in-law
-	has-role mother-in-law
-	has-role father-in-law;
+	relates child-in-law
+	relates son-in-law
+	relates daughter-in-law
+	relates parent-in-law
+	relates mother-in-law
+	relates father-in-law;
 
 child-in-law sub role;
 son-in-law sub child-in-law;
@@ -181,8 +181,8 @@ mother-in-law sub parent-in-law;
 father-in-law sub parent-in-law;
 
 conclusion-evidence sub relation
-	has-role evidence
-	has-role conclusion;
+	relates evidence
+	relates conclusion;
 
 evidence sub role;
 conclusion sub role;
